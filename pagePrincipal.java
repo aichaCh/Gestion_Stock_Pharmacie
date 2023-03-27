@@ -159,12 +159,12 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        delete.setVisible(false);
        if(e.getSource()==recherche_Icon){
            String text= recherche.getText();
            if (!Objects.equals(text, "") && !Objects.equals(text, " Rechercher")) {
                String [][] med= FillTheTable.recherche(text);
                this.tableData(med);
-               delete.setVisible(false);
                System.out.println("tableChange");
            }
 
@@ -232,6 +232,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 
 
              }
+
          }
          else{
              delete.setBounds(10,510,32,32);
