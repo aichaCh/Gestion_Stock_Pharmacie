@@ -25,8 +25,10 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
     JLayeredPane lP;
     JTable medicament=new JTable();
     JTableHeader theader;
+    DefaultTableModel model;
+    String[][] a;
     public void tableData(String [][] meds){
-
+        a=meds;
         String [] header={"Nom","Prix","Quantity","Date de fin"};
 //        for (String[] r:
 //                FillTheTable.showData() ) {
@@ -36,8 +38,8 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 //            }
 //
 //        }
-        DefaultTableModel model= (DefaultTableModel) medicament.getModel();
-        model.setDataVector(meds,header);
+        model= (DefaultTableModel) medicament.getModel();
+        model.setDataVector(a,header);
 //        medicament=new JTable(meds,header);
 
 
@@ -179,8 +181,10 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
                 this.tableData(null);
             }
         }
-       if(e.getSource()==addMedicament){
+        if(e.getSource()==addMedicament){
+           Add ajou=new Add();
 
+           addMedicament.setEnabled(false);
         }
 
     }
@@ -209,9 +213,10 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
     public void mouseClicked(MouseEvent e) {
        if (e.getSource()==delete){
            int supORNo=JOptionPane.showConfirmDialog(null,"Êtes-vous sûr de vouloir effacer définitivement cette médicament ? ","Suppremer le medecament",2);
-
+           System.out.println(medicament.getSelectedRow());
            if ( supORNo==0) {
-               String id=FillTheTable.showData()[medicament.getSelectedRow()][4];
+               String id= a[medicament.getSelectedRow()][4];
+
                System.out.println(id);
                FillTheTable.deleteRow(id);
                this.tableData(FillTheTable.showData());
@@ -226,7 +231,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
          if (SwingUtilities.isRightMouseButton(e)){
              if (medicament.getSelectedRow()!=-1) {
                  if (e.getY()+150<=650)
-                 { delete.setBounds(10,e.getYOnScreen()-70,32,32);
+                 { delete.setBounds(10,e.getYOnScreen()-90,32,32);
                      delete.setVisible(true);
                  }
 
