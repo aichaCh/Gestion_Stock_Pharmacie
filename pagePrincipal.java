@@ -9,13 +9,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class pagePrincipal extends JFrame  implements ActionListener,KeyListener,MouseListener,FocusListener {
+public class pagePrincipal extends JFrame  implements ActionListener,KeyListener,MouseListener,FocusListener,WindowListener {
     JButton recherche_Icon;
     JTextField recherche;
     JButton addMedicament;
     JLabel delete;
     JMenuBar menuBar;
     JMenu btn;
+    Add ajouter;
     JMenuItem stat,notification,supTout;
     Border border=BorderFactory.createLineBorder(Color.black,1);
     Border textFieldBorder=BorderFactory.createLineBorder(Color.black,1);
@@ -155,12 +156,6 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        pagePrincipal test=new pagePrincipal();
-
-
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -169,6 +164,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
            if (!Objects.equals(text, "") && !Objects.equals(text, " Rechercher")) {
                String [][] med= FillTheTable.recherche(text);
                this.tableData(med);
+               delete.setVisible(false);
                System.out.println("tableChange");
            }
 
@@ -182,9 +178,8 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
             }
         }
         if(e.getSource()==addMedicament){
-           Add ajou=new Add();
-
-           addMedicament.setEnabled(false);
+           ajouter=new Add(addMedicament);
+           ajouter.addWindowListener(this);
         }
 
     }
@@ -271,7 +266,6 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
             }
 
 
-
     }
 
     @Override
@@ -281,7 +275,43 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
             recherche.setForeground(Color.lightGray);
 
         }
+
     }
 
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        addMedicament.setEnabled(true);
+        this.tableData(FillTheTable.showData());
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }
