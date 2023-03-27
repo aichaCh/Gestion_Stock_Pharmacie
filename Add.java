@@ -2,21 +2,29 @@ package the_project;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Objects;
 
-public class Add extends JFrame {
-    public Add(){
+public class Add extends JFrame implements ActionListener {
+    JTextField txt1,txt2,txt3,txt4,txt5;
+    public Add(Component com){
         JLabel nomLabel = new JLabel("Nom :");
-        JTextField txt1 = new JTextField(15);
+        txt1 = new JTextField(15);
         JLabel prixlabel = new JLabel("Prix:");
-        JTextField txt2 = new JTextField(15);
+        txt2 = new JTextField(15);
         JLabel quantlabel = new JLabel("Quantité:");
-        JTextField txt3 = new JTextField(15);
+        txt3 = new JTextField(15);
         JLabel datlabel = new JLabel("Date fin :");
-        JTextField txt4 = new JTextField(15);
+        txt4 = new JTextField(15);
         JLabel ajoutProduit = new JLabel("Ajouter un produit ");
         JButton Produit = new JButton("Ajouter  ");
         JLabel idlabel = new JLabel("ID_Produit :");
-        JTextField txt5 = new JTextField(15);
+        txt5 = new JTextField(15);
         this.setSize(600,600);
         Container contentPane = getContentPane();
         SpringLayout layout = new SpringLayout();
@@ -63,6 +71,8 @@ public class Add extends JFrame {
         layout.putConstraint(SpringLayout.NORTH,txt4,40,SpringLayout.SOUTH,txt3);
         layout.putConstraint(SpringLayout.WEST,txt4,0,SpringLayout.WEST,txt3);
 
+
+
         contentPane.add(ajoutProduit);
         layout.putConstraint(SpringLayout.WEST,ajoutProduit,200,SpringLayout.WEST,contentPane);
         layout.putConstraint(SpringLayout.NORTH,ajoutProduit,30,SpringLayout.NORTH,contentPane);
@@ -76,6 +86,7 @@ public class Add extends JFrame {
         Produit.setFont(new java.awt.Font("Serif", 1, 22));
         Produit.setForeground(new java.awt.Color(162, 26, 26, 199));
         Produit.setFocusable(false);
+        Produit.addActionListener(this);
         contentPane.setBackground(Color.CYAN);
         nomLabel.setFont(new java.awt.Font("Serif", 1, 15));
         prixlabel.setFont(new java.awt.Font("Serif", 1, 15));
@@ -83,9 +94,44 @@ public class Add extends JFrame {
         datlabel.setFont(new java.awt.Font("Serif", 1, 15));
         idlabel.setFont(new java.awt.Font("Serif", 1, 15));
         setResizable(false);
+        com.setEnabled(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
 
+
+
     }
-    
+  public int[] Insert() {
+      // la connection avec la base de donnéés
+      int[] s = new int[0];
+      try {
+          Class.forName("com.mysql.cj.jdbc.Driver");
+          Connection connection = DriverManager.getConnection(
+                  "jdbc:mysql://localhost:3306/gestionpharmacie", "root", ""
+          );
+          Statement statement = connection.createStatement();
+          statement.addBatch("INSERT INTO `themain`(`Id`, `Nom`, `Prix`, `Quantity`, `Date_fin`) VALUES ('" + txt5.getText() + "','" + txt1.getText() + "','" + txt2.getText() + "','" + txt3.getText() + "','" + txt4.getText() + "')");
+          s = statement.executeBatch();
+
+          connection.close();
+      } catch (Exception e) {
+          System.out.println(e);
+      }
+      return s;
+  }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+       if (Insert()!=null){
+           JOptionPane.showMessageDialog(null,"Un medicament ajouter","L'opération a réussi",JOptionPane.PLAIN_MESSAGE);
+           txt1.setText("");
+           txt2.setText("");
+           txt3.setText("");
+           txt4.setText("");
+           txt5.setText("");
+       }
+
+
+    }
 }
