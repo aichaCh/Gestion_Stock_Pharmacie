@@ -10,8 +10,8 @@ import java.awt.event.*;
 import java.util.Objects;
 
 public class pagePrincipal extends JFrame  implements ActionListener,KeyListener,MouseListener,FocusListener,WindowListener {
-    JButton recherche_Icon;
-    JTextField recherche;
+    JButton recherche_Icon,acheter;
+    JTextField recherche,nbr;
     JButton addMedicament;
     JLabel delete;
     JMenuBar menuBar;
@@ -22,7 +22,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
     Border textFieldBorder=BorderFactory.createLineBorder(Color.black,1);
     //Border textFieldBorder=BorderFactory.createTitledBorder(border,"Recherche",2,2,new Font(null,Font.ITALIC,15));
     Border tableBorder=BorderFactory.createLineBorder(Color.black,2);
-    JPanel panel1,panel2;
+    JPanel panel1,panel2,panel3;
     JLayeredPane lP;
     JTable medicament=new JTable();
     JTableHeader theader;
@@ -54,7 +54,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         this.setIconImage(icon.getImage());
         //this.getContentPane().setBackground(Color.CYAN);
         this.setLayout(null);
-
+        this.addWindowListener(this);
 
         recherche=new JTextField();
         recherche.requestFocus(false);
@@ -147,15 +147,34 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         panel2.setBounds(50,155,900,200);
         //panel2.setBackground(Color.red);
         panel2.add(s);
+        panel3=new JPanel();
+        panel3.setLayout(null);
+        panel3.setBounds(50,360,900,90);
+        //panel3.setBackground(Color.red);
+
+        acheter=new JButton();
+        acheter.setText("Acheter");
+        acheter.setBounds(400,10,100,30);
+        acheter.setFocusable(false);
+        acheter.addActionListener(this);
+        nbr=new JTextField();
+        nbr.setBounds(500,10,50,30);
+        nbr.setToolTipText("la quantité de medicament");
+        panel3.add(acheter);
+        panel3.add(nbr);
+
         this.add(delete);
 
         this.setJMenuBar(menuBar);
         this.add(panel1);
         this.add(panel2);
-
+        this.add(panel3);
         this.setVisible(true);
     }
 
+    public static void main(String[] args) {
+        pagePrincipal p=new pagePrincipal();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -180,6 +199,19 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         if(e.getSource()==addMedicament){
            ajouter=new Add(addMedicament);
            ajouter.addWindowListener(this);
+        }
+        if (e.getSource()==acheter){
+            if (medicament.getSelectedRow()!=-1 && !Objects.equals(nbr.getText(), "") && Integer.parseInt(nbr.getText())<=Integer.parseInt(a[medicament.getSelectedRow()][2]) ){
+                int supORNo=JOptionPane.showConfirmDialog(null,"Voulez-vous acheter ce médicament ? ","Confirmed",2);
+                if ( supORNo==0)
+                {
+                    FillTheTable.acheter(Integer.parseInt(nbr.getText()),a[medicament.getSelectedRow()][4], Integer.parseInt(a[medicament.getSelectedRow()][2]));
+                    this.tableData(FillTheTable.showData());
+
+                }
+                nbr.setText("");
+                System.out.println("yes");
+            }
         }
 
     }
@@ -266,7 +298,6 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 
             }
 
-
     }
 
     @Override
@@ -283,6 +314,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
     @Override
     public void windowOpened(WindowEvent e) {
 
+        nbr.requestFocus();
     }
 
     @Override
