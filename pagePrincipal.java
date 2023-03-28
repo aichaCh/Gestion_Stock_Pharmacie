@@ -154,11 +154,11 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 
         acheter=new JButton();
         acheter.setText("Acheter");
-        acheter.setBounds(400,10,100,30);
+        acheter.setBounds(400,25,100,30);
         acheter.setFocusable(false);
         acheter.addActionListener(this);
         nbr=new JTextField();
-        nbr.setBounds(500,10,50,30);
+        nbr.setBounds(500,25,50,30);
         nbr.setToolTipText("la quantité de medicament");
         panel3.add(acheter);
         panel3.add(nbr);
