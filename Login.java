@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Objects;
 
 
 public class Login extends JFrame implements ActionListener{
@@ -73,12 +74,13 @@ public class Login extends JFrame implements ActionListener{
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery("select * from admin");
             while (resultSet.next()) {
+                res[0][0]=resultSet.getString(1);
+                res[0][1]=resultSet.getString(2);
                 System.out.println(resultSet.getString(1) + " " + resultSet.getString(2));
 
 
             }
-            res[0][0]=resultSet.getString(1);
-            res[0][1]=resultSet.getString(2);
+
 
             connection.close();
         } catch (Exception e) {
@@ -96,12 +98,16 @@ public class Login extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String username=txt1.getText();
-        String passwordd=TXT2.getText();
-        String[][] log=new String[1][2];
-        log=ConnectionLogin();
-        if (log[0][0]==passwordd && log[0][1]==username){
+        String password=TXT2.getText();
+        String[][] log=ConnectionLogin();
+
+
+        if (Objects.equals(log[0][0], password) && Objects.equals(log[0][1], username)){
             this.dispose();
             pagePrincipal page=new pagePrincipal();
         }
+        else
+            JOptionPane.showMessageDialog(null,"le mot de passe ou le nom de l'utilisateur est uncorrect","Error",JOptionPane.ERROR_MESSAGE);
+
     }
 }
