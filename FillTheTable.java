@@ -90,4 +90,15 @@ public class FillTheTable {
             throw new RuntimeException(e);
         }
     }
+    public static void acheter(int nbr,String id,int pQ){
+        Connection con=getConnection();
+        Statement ps;
+        try {
+            ps = con.createStatement();
+            ps.addBatch("UPDATE `themain` SET `Quantity`='"+(pQ-nbr)+"' WHERE Id='"+id+"'");
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
