@@ -174,9 +174,9 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        pagePrincipal p=new pagePrincipal();
-    }
+    //public static void main(String[] args) {
+        //pagePrincipal p=new pagePrincipal();
+    //}
 
     @Override
     public void actionPerformed(ActionEvent e) {
