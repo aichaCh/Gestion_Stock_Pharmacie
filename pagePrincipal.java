@@ -208,6 +208,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
                     System.out.println(vec);
                 }
             }
+            else vec=null;
            ajouter=new Add(addMedicament,vec);
            ajouter.addWindowListener(this);
         }
@@ -364,6 +365,7 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         if (e.getSource()==ajouter){
             addMedicament.setEnabled(true);
             this.tableData(FillTheTable.showData());
+            System.out.println("yes");
         }
 
 
