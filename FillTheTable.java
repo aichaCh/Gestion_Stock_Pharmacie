@@ -64,8 +64,8 @@ public class FillTheTable {
       public static String[][] showData(){
        return fillTable("SELECT * FROM themain");
     }
-      public static String[][] recherche(String a){
-          String sql="SELECT * FROM themain WHERE Nom='"+a+"'";
+      public static String[][] recherche(String a,String n){
+          String sql="SELECT * FROM themain WHERE "+n+"='"+a+"'";
           return fillTable(sql);
     }
     public static void delete(){
