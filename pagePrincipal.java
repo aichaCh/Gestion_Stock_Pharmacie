@@ -8,8 +8,10 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
+import java.util.Vector;
 
 public class pagePrincipal extends JFrame  implements ActionListener,KeyListener,MouseListener,FocusListener,WindowListener {
+    String[] vec;
     JButton recherche_Icon,acheter;
     JTextField recherche,nbr;
     JButton addMedicament;
@@ -172,9 +174,9 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
         this.setVisible(true);
     }
 
-   // public static void main(String[] args) {
-        //pagePrincipal p=new pagePrincipal();
-  //  }
+    public static void main(String[] args) {
+        pagePrincipal p=new pagePrincipal();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -182,7 +184,8 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
        if(e.getSource()==recherche_Icon){
            String text= recherche.getText();
            if (!Objects.equals(text, "") && !Objects.equals(text, " Rechercher")) {
-               String [][] med= FillTheTable.recherche(text);
+               String s="Nom";
+               String [][] med= FillTheTable.recherche(text,s);
                this.tableData(med);
                System.out.println("tableChange");
            }
@@ -197,7 +200,15 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
             }
         }
         if(e.getSource()==addMedicament){
-           ajouter=new Add(addMedicament);
+            vec=new String[5];
+            if (medicament.getSelectedRow()!=-1){
+
+                for (int i = 0; i <5 ; i++) {
+                    vec[i]=a[medicament.getSelectedRow()][i] ;
+                    System.out.println(vec);
+                }
+            }
+           ajouter=new Add(addMedicament,vec);
            ajouter.addWindowListener(this);
         }
         if (e.getSource()==acheter){
@@ -310,17 +321,52 @@ public class pagePrincipal extends JFrame  implements ActionListener,KeyListener
 
     }
 
-
+    int count=0;
     @Override
     public void windowOpened(WindowEvent e) {
+        if (e.getSource()==this){
+            nbr.requestFocus();
 
-        nbr.requestFocus();
+            String [][] medec= FillTheTable.recherche("0","Quantity");
+            for (String[] g:medec) {
+
+                String[][] b=FillTheTable.recherche(g[0],"Nom");
+
+                if(b.length>1){
+                    for (String[] n: b) {
+
+
+                        System.out.println(g[4].substring(0,7));
+                        if (n[4].contains(g[4].substring(0,7))){
+                            count++;
+
+                        }
+                    }
+
+                    if (count>1){
+
+                        FillTheTable.deleteRow(g[4]);
+                        this.tableData(FillTheTable.showData());
+                        count=0;
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
     }
-
     @Override
     public void windowClosing(WindowEvent e) {
-        addMedicament.setEnabled(true);
-        this.tableData(FillTheTable.showData());
+        if (e.getSource()==ajouter){
+            addMedicament.setEnabled(true);
+            this.tableData(FillTheTable.showData());
+        }
+
+
     }
 
     @Override
