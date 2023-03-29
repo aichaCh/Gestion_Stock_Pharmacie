@@ -4,15 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Objects;
+import java.util.Vector;
 
 public class Add extends JFrame implements ActionListener {
     JTextField txt1,txt2,txt3,txt4,txt5;
-    public Add(Component com){
+    Component enable;
+    boolean error=false;
+    int one;
+    public Add(Component com,String[] vec){
+        enable=com;
         JLabel nomLabel = new JLabel("Nom :");
         txt1 = new JTextField(15);
         JLabel prixlabel = new JLabel("Prix:");
@@ -97,7 +104,13 @@ public class Add extends JFrame implements ActionListener {
         com.setEnabled(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
-
+        if (vec!=null){
+            txt5.setText(vec[4].substring(0,7));
+            txt1.setText(vec[0]);
+            txt2.setText(vec[1]);
+            txt3.setText(vec[2]);
+            txt4.setText(vec[3]);
+        }
 
 
     }
@@ -110,8 +123,34 @@ public class Add extends JFrame implements ActionListener {
                   "jdbc:mysql://localhost:3306/gestionpharmacie", "root", ""
           );
           Statement statement = connection.createStatement();
+
+          for (int i = 0; i < FillTheTable.showData().length; i++) {
+              if (FillTheTable.showData()[i][4].contains(txt5.getText()) && Objects.equals(txt1.getText(), FillTheTable.showData()[i][0])){
+                  one=i;
+                  j++;
+              } else if (Objects.equals(FillTheTable.showData()[i][4], txt5.getText())) {
+                  JOptionPane.showMessageDialog(null,"Cette id est deja exist","Error",JOptionPane.ERROR_MESSAGE);
+                  error = true;
+              }
+          }
+
+          if (j!=0){
+              //System.out.println(FillTheTable.recherche(txt5.getText()+"0"+j,"Id").length);
+              if (!(j==1 && FillTheTable.showData()[one][4].contains("01"))){
+                      txt5.setText(txt5.getText()+"0"+j);
+                      if(FillTheTable.recherche(txt5.getText().substring(0,7)+"0"+j,"Id").length==1){
+                          int g=j+1;
+                          txt5.setText(txt5.getText().substring(0,7)+"0"+g);
+
+                      }
+              }
+
+          }
+
           statement.addBatch("INSERT INTO `themain`(`Id`, `Nom`, `Prix`, `Quantity`, `Date_fin`) VALUES ('" + txt5.getText() + "','" + txt1.getText() + "','" + txt2.getText() + "','" + txt3.getText() + "','" + txt4.getText() + "')");
-          s = statement.executeBatch();
+
+          if (!error)
+              s = statement.executeBatch();
 
           connection.close();
       } catch (Exception e) {
@@ -119,11 +158,13 @@ public class Add extends JFrame implements ActionListener {
       }
       return s;
   }
-
+    int j=0;
     @Override
     public void actionPerformed(ActionEvent e) {
 
-       if (Insert()!=null){
+
+
+       if (Insert()!=null && !error){
            JOptionPane.showMessageDialog(null,"Un medicament ajouter","L'opération a réussi",JOptionPane.PLAIN_MESSAGE);
            txt1.setText("");
            txt2.setText("");
@@ -134,4 +175,9 @@ public class Add extends JFrame implements ActionListener {
 
 
     }
+
+
+
+
+
 }
